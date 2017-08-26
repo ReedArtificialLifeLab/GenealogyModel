@@ -1,18 +1,36 @@
+import genealogy
+import dot_creator
+import genealogy_inspector as gi
+import testing
 import numpy as np
-from traitsgenealogy import Genealogy
-import fitnessfunctions as ff
-import inspector
+from tqdm import tqdm
 
-gen = Genealogy(
-    10, # how many iterations :: int
-    10, # number of members in each generation
-    1, # parents each member has :: int
-    [2,3], # how much each trait is worth :: [float]
-    ff.PROD, # how to combine traits into fitness :: [bool] -> float
-    [0,50,50,0] # relative abundancy of traits in gen0 :: [bool]
-)
+#-------------#
+p_start = 1
+p_end   = 2
+p_it    = 1
 
-inspector.plotAllDistributions(gen)
-# inspector.plotTargetDistribution(gen,0)
+r_start = 10
+r_end   = 10.5
+r_it    = 0.5
 
-# inspector.show()
+tests   = 10
+#-------------#
+
+parents_range = np.arange(p_start+p_it,p_end+p_it,p_it)
+ratio_range = np.arange(r_start+r_it,r_end+r_it,r_it)
+
+gi.calc_smoothed_percents_range(parents_range,ratio_range,tests)
+gi.calc_exp_regressions(parents_range,ratio_range)
+
+# gi.plot_percents_range([parents],ratio_range)
+# gi.plot_exp_regressions(parents_range,ratio_range,x50=True)
+
+# gi.plot_d50s(parents,ratio_range)
+# gi.plot_d0s(parents_range,ratio_range)
+
+# gi.title("Derivatives at Abundance=0,50")
+# gi.legend()
+# gi.show()
+
+quit()

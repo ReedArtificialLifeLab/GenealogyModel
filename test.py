@@ -1,15 +1,29 @@
-def ind_to_bin(x,tlen):
-    n = to_bin(x)
-    res = [int(i) for i in list(str(n))]
-    while(len(res) < tlen):
-        res = [0] + res
-    return res
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+random.seed()
 
-def to_bin(x):
-    return int(bin(x)[2:])
+n = 50
+def f(x):
+    return np.log(x) + random.randint(0,2)
 
-traits_expansion = 4
-tlen = 2
-for i in range(traits_expansion):
-    b = ind_to_bin(i,tlen)
-    print("result",b)
+xs = [x for x in range(50)]
+ys = [f(x) for x in xs]
+
+plt.scatter(xs, ys)
+
+for i in range(len(xs)-1):
+    print(i)
+    if xs[i] <= 0:
+        xs.remove(xs[i])
+        ys.remove(ys[i])
+
+fit = np.polyfit(np.log(xs), ys, deg=1)
+fit_fn = np.poly1d(fit)
+
+xs = np.arange(min(xs),max(xs),0.1)
+ys = fit_fn(xs)
+
+plt.plot(xs, ys)
+
+plt.show()
