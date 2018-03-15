@@ -133,17 +133,51 @@ def savefig(name,rangex=None,rangey=None):
 
     plt.savefig(name)
 
-def plot_percents(parents,ratio):
+def plot_percents(parents,ratio,label=None,title=None,xlabel=None,ylabel=None):
 
     results = read_testresults("percents").get_result("percents",parents,ratio)
 
-    plt.title("Percentage of population that is dominant trait")#\n(parents=" + str(parents) + ",ratio=" + str(ratio) + ")")
-    plt.xlabel('Generation')
-    plt.ylabel('Percentage Red')
+    title  = title  or "Growth of Dominant Trait"
+    xlabel = xlabel or "Generation"
+    ylabel = ylabel or "Percentage Dominant Trait"
+
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
 
     xs = [x for x in range(len(results))]
 
-    plt.plot(xs, results, '.', label='ratio=' + str(ratio))
+    label = label or 'ratio=' + str(ratio) + ", parents=" + str(parents)
+    plt.plot(xs, results, '.', label=label)
+
+    # quadratic regression
+    fit = optimize.curve_fit(
+        lambda x,a,b,c: a*x**2 + b*x + c,
+        xs,  results,
+        p0 = (0.3,0,0.5)
+    )
+    fit = fit[0]
+    fit_fn = lambda x: fit[0]*x**2 + fit[1]*x + fit[2]
+    print("y(x) = ax^2 + bx + c")
+    print("a =",fit[0])
+    print("b =",fit[1])
+    print("c =",fit[2])
+
+    # # logarithmic regression # DOESNT WORK YET
+    # fit = optimize.curve_fit(
+    #     lambda x,a,b,c: a + b*np.log(c+x),
+    #     xs,  results,
+    #     p0 = (0,1,0.3)
+    # )
+    # fit = fit[0]
+    # fit_fn = lambda x: fit[0] + fit[1]*np.log10(fit[2]+x)
+    # # print("y(x) = a ln(b + x)")
+    # # print("a =",fit[0])
+    # # print("b =",fit[1])
+
+    xs = np.arange(min(xs),max(xs),0.1)
+    ys = [fit_fn(xi) for xi in xs]
+    plt.plot(xs,ys,'--g')
 
 def plot_percents_range(parents_range,ratio_range):
     for parents in parents_range:

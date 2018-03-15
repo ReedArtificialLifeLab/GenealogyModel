@@ -10,16 +10,14 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
 tests = 50
-generations = 2
+generations = 20
 generations_sizes = 10
 a = 0
 p = 0
 t = 1
 
-parents_range = [1,2,3,4,5,6,7,8,9,10]
-ratio = 2
-
-ratio_range = range(ratio,ratio+1)
+parents = 1
+ratio_range = [1,2,4]
 
 gi.set_parameters({
     'a': a,
@@ -27,16 +25,19 @@ gi.set_parameters({
     't': t,
     'generations': generations,
     'generations_sizes': generations_sizes,
-    'balanced': True
+    'balanced': False,
+    'initial_counts': [1,10]
 })
 
-gi.calc_smoothed_percents_range(parents_range,ratio_range,tests)
-# # gi.calc_exp_regressions(parents_range,ratio_range)
-gi.calc_first_slopes(parents_range,ratio_range)
+# calculate data
+for ratio in ratio_range:
+    gi.calc_smoothed_percents(parents,ratio,tests)
 
+# plot
 gi.initfig()
+for ratio in ratio_range:
+    gi.plot_percents(parents,ratio)
 
-# gi.plot_d0s_parents(parents_range,ratio,"linear")
-gi.plot_first_slopes_parents(parents_range,ratio,"quadratic")
-
+# save
+gi.legend()
 gi.savefig("outputs/tmp/test.png")
