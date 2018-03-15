@@ -19,6 +19,7 @@ def create_dot(gen_data,pdf=False,seperate_colors=False,trait=0):
     # first couple of lines
     dot_file = file_manager.FileManager(directory,get_genealogy_name()+".dot")
     dot_file.write("graph \"" + get_genealogy_name() + "\"{")
+    dot_file.write("\n")
 
     # create the dot stuff
     config_graph()
@@ -37,8 +38,8 @@ def create_dot(gen_data,pdf=False,seperate_colors=False,trait=0):
     finish()
 
     if pdf:
-        os.system("sudo dot " + directory + get_genealogy_name() + ".dot -Tpdf -o " + directory + get_genealogy_name() + ".pdf")
-        os.system("sudo rm " + directory + get_genealogy_name() + ".dot")
+        os.system("dot " + directory + get_genealogy_name() + ".dot -Tpdf -o " + directory + get_genealogy_name() + ".pdf")
+        os.system("rm " + directory + get_genealogy_name() + ".dot")
 
 
 
@@ -84,31 +85,31 @@ def get_member_raw(mem_ind):
 
 
 def set_graph_label(s):
-    dot_file.write("   label=<<FONT POINT-SIZE='50'>\"" + s + "\"</FONT>>;")
-    dot_file.write("   labelloc=tp;")
+    dot_file.write("    label=<<FONT POINT-SIZE='50'>\"" + s + "\"</FONT>>;")
+    dot_file.write("    labelloc=tp;")
 
 
 
 def set_graph_attribute(attr,val):
-    dot_file.write("   graph [" + str(attr) + "=" +  str(val) + "];")
+    dot_file.write("    graph [" + str(attr) + "=" +  str(val) + "];")
 
 
 
 def set_node_attribute(attr,val):
-    dot_file.write("   node [" + str(attr) + "=" +  str(val) + "];")
+    dot_file.write("    node [" + str(attr) + "=" +  str(val) + "];")
 
 
 
 def set_edge_attribute(attr,val):
-    dot_file.write("   edge [" + str(attr) + "=" + str(val) + "];")
+    dot_file.write("    edge [" + str(attr) + "=" + str(val) + "];")
 
 
 
 def create_labels():
     global labels
 
-    dot_file.write("   subgraph labels {")
-    dot_file.write("       node[style=invis];edge[style=invis]")
+    dot_file.write("    subgraph labels {")
+    dot_file.write("        node[style=invis];edge[style=invis]")
     
     s = ""
     
@@ -119,15 +120,16 @@ def create_labels():
         s += lab + " -- "
     s = s[:-4]
     
-    dot_file.write("      " + s + ";")
-    dot_file.write("   }")
+    dot_file.write("        " + s + ";")
+    dot_file.write("    }")
+    dot_file.write("\n")
 
 
 
 def create_generations():
     for j in range(len(get_generation_sizes())):
 
-        s = "   {rank=same;" + labels[j] + ";"
+        s = "    {rank=same;" + labels[j] + ";"
         
         for i in range(get_generation_size(j)):
         
@@ -136,6 +138,8 @@ def create_generations():
         s += "}"
         
         dot_file.write(s)
+
+    dot_file.write("\n")
 
 
 
@@ -168,13 +172,13 @@ def create_colors(traits):
         for gen in get_generation_sizes():
             for i in range(gen):
                 m = get_member(gen_ind,i)
-                if calculate_member_color(m) == "#" + str()
+                # if calculate_member_color(m) == "#" + str()
             gen_ind += 1
 
         s = "   {rank=same;" + labels[j] + ";"
         
-        for i in range(get_generation_size(j)):
-        
+        # for i in range(get_generation_size(j)):
+            # TODO
             
         
         s += "}"
@@ -207,7 +211,7 @@ def create_relations():
 
             for child in children:
 
-                s = "   " + index_to_name(i,j) + " -- " + index_raw_to_name(child)
+                s = "    " + index_to_name(i,j) + " -- " + index_raw_to_name(child)
                 
                 edge_color = calculate_edge_color(m,child)
                 pen_width = calculate_edge_width(m,child)
@@ -250,6 +254,8 @@ def create_member_attributes():
 
         gen_ind += 1
 
+    dot_file.write("\n")
+
 
 
 def finish():
@@ -260,7 +266,7 @@ def finish():
 def config_graph():
     # set_graph_label(get_genealogy_name())
     
-    # set_graph_attribute("splines","splines")
+    set_graph_attribute("splines","polyline")
     set_graph_attribute("nodesep","0.1")
     set_graph_attribute("ranksep",1)
 

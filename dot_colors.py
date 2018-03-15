@@ -62,5 +62,5 @@ def to_bin_arr(x):
     n = to_bin(x)
     return [int(i) for i in list(str(n))]
 
-for i in range(2**3):
-    print(to_bin(i))
+# for i in range(2**3):
+#     print(to_bin(i))

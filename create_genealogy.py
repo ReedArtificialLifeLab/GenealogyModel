@@ -21,25 +21,31 @@ def multitrait(dot,csv):
     if csv:
         csv_creator.create_csv(gen_data)
 
-multitrait(True,False)
+# multitrait(True,False)
 
 
 ####################
 ### SINGLE TRAIT ###
 ####################
 
-a = 1
-p = 1
-t = 1
-parents = 4
-trait_weights = [2,1]
-
 def singletrait(dot,csv):
+    
     genealogy.init_genealogy()
-    gen_data = genealogy.make_genealogy( name="SINGLETRAIT", generations=100, generation_sizes_function=lambda x: 50, parents=parents, balanced=True, trait_factor=t, age_factor=a, popular_factor=p, trait_weights=trait_weights )
+    
+    gen_data = genealogy.make_genealogy(
+        name                      = "SINGLETRAIT",
+        generations               = 30,
+        generation_sizes_function = lambda x: 30,
+        parents                   = 4,
+        balanced                  = True,
+        trait_factor              = 1,
+        age_factor                = 0,
+        popular_factor            = 0,
+        trait_weights             = [4,1] )
+    
     if dot:
-        dot_creator.create_dot(gen_data)
+        dot_creator.create_dot(gen_data,pdf=True)
     if csv:
         csv_creator.create_csv(gen_data)
 
-# singletrait(True,False)
+singletrait(True,False)

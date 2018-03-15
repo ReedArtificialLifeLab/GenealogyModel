@@ -5,22 +5,19 @@ import numpy as np
 import sys
 import time
 import file_manager
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
 
 # tests, parents, generations, generations_sizes, a, p, t, traits
 
-parents_range = range(95,101)
+parents_range = [1,3,6]
 
 gi.set_parameters({
-	'tests': 100,
+	'tests': 10,
 	'generatiaons': 2,
-	'generations_sizes': 100,
+	'generations_sizes': 20,
 	'a': 0,
 	'p': 0,
 	't': 1,
-	'traits': [2,8,32],
+	'traits': [1,2,3],
 	'target': [1,1,1],
 	'traits_function': 'prod' # prod or sum
 })
@@ -32,4 +29,4 @@ gi.initfig()
 
 gi.plot_first_slopes_parents(parents_range,"linear")
 
-gi.savefig("outputs/parents/evolutionrate/evolutionrate_parents_prod_traits3_endrange.png")
+gi.savefig("outputs/tmp/test.png")
