@@ -9,15 +9,15 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
-tests = 10
-generations = 20
+tests = 100
+generations = 10
 generations_sizes = 1000
 a = 0
 p = 0
 t = 1
 
 parents = 1
-ratio_range = [1,2,4]
+ratio_range = [1,1.25,1.5,1.75]
 
 gi.set_parameters({
     'a': a,
