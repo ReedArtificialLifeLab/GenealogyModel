@@ -9,7 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
-tests = 50
+tests = 100
 generations = 2
 generations_sizes = 10
 a = 0

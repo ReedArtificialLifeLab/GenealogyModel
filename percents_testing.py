@@ -9,9 +9,9 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
-tests = 50
+tests = 10
 generations = 20
-generations_sizes = 10
+generations_sizes = 1000
 a = 0
 p = 0
 t = 1
@@ -26,7 +26,7 @@ gi.set_parameters({
     'generations': generations,
     'generations_sizes': generations_sizes,
     'balanced': False,
-    'initial_counts': [1,10]
+    'initial_counts': [1,generations_sizes]
 })
 
 # calculate data

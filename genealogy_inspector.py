@@ -177,7 +177,7 @@ def plot_percents(parents,ratio,label=None,title=None,xlabel=None,ylabel=None):
 
     xs = np.arange(min(xs),max(xs),0.1)
     ys = [fit_fn(xi) for xi in xs]
-    plt.plot(xs,ys,'--g')
+    plt.plot(xs,ys,'--')
 
 def plot_percents_range(parents_range,ratio_range):
     for parents in parents_range:
