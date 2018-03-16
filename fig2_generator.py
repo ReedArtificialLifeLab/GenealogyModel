@@ -17,7 +17,6 @@ p = 0
 t = 1
 
 parents = 1
-# ratio_range = [1,1.25,1.5,1.75]
 ratio_range = [1,2,3,4]
 
 gi.set_parameters({

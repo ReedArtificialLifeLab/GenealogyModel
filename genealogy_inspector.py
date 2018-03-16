@@ -148,32 +148,46 @@ def plot_percents(parents,ratio,label=None,title=None,xlabel=None,ylabel=None):
     xs = [x for x in range(len(results))]
 
     label = label or 'ratio=' + str(ratio) + ", parents=" + str(parents)
-    plt.plot(xs, results, '.', label=label)
+    plt.plot(xs, results,   '.', label=label)
 
-    # quadratic regression
-    fit = optimize.curve_fit(
-        lambda x,a,b,c: a*x**2 + b*x + c,
-        xs,  results,
-        p0 = (0.3,0,0.5)
-    )
-    fit = fit[0]
-    fit_fn = lambda x: fit[0]*x**2 + fit[1]*x + fit[2]
-    print("y(x) = ax^2 + bx + c")
-    print("a =",fit[0])
-    print("b =",fit[1])
-    print("c =",fit[2])
+    if ratio == 1:
 
-    # # logarithmic regression # DOESNT WORK YET
-    # fit = optimize.curve_fit(
-    #     lambda x,a,b,c: a + b*np.log(c+x),
-    #     xs,  results,
-    #     p0 = (0,1,0.3)
-    # )
-    # fit = fit[0]
-    # fit_fn = lambda x: fit[0] + fit[1]*np.log10(fit[2]+x)
-    # # print("y(x) = a ln(b + x)")
-    # # print("a =",fit[0])
-    # # print("b =",fit[1])
+        # linear regression
+        fit = optimize.curve_fit(
+            lambda x,a,b: a*x + b,
+            xs,  results,
+            p0 = (0.3,0)
+        )
+        fit = fit[0]
+        fit_fn = lambda x: fit[0]*x + fit[1]
+        print("y(x) = ax + b")
+        print("a =",fit[0])
+        print("b =",fit[1])
+
+    else:
+
+        # # quadratic regression
+        fit = optimize.curve_fit(
+            lambda x,a,b,c: a*x**2 + b*x + c,
+            xs,  results,
+            p0 = (0.3,0,0.5)
+        )
+        fit = fit[0]
+        fit_fn = lambda x: fit[0]*x**2 + fit[1]*x + fit[2]
+        print("y(x) = ax^2 + bx + c")
+        print("a =",fit[0])
+        print("b =",fit[1])
+        print("c =",fit[2])
+
+        # # # logarithmic regression
+        # xs = np.array(xs[1:])
+        # results = np.array(results[1:])
+        # fit = np.polyfit(np.log(xs), results, 1)
+        # a,b = fit[0], fit[1]
+        # fit_fn = lambda x: a*np.log(x) + b
+        # print("y(x) = a log(x) + b")
+        # print("a =",fit[0])
+        # print("b =",fit[1])
 
     xs = np.arange(min(xs),max(xs),0.1)
     ys = [fit_fn(xi) for xi in xs]

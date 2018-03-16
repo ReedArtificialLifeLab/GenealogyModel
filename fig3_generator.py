@@ -9,15 +9,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
-tests = 10
-generations = 20
-generations_sizes = 100
+tests = 100
+generations = 2
+generations_sizes = 1000
 a = 0
 p = 0
 t = 1
 
-parents = 1
-# ratio_range = [1,1.25,1.5,1.75]
+parents_range = [1,2,3]
 ratio_range = [1,2,3,4]
 
 gi.set_parameters({
@@ -31,13 +30,13 @@ gi.set_parameters({
 })
 
 # calculate data
-for ratio in ratio_range:
-    gi.calc_smoothed_percents(parents,ratio,tests)
+gi.calc_smoothed_percents_range(parents_range,ratio_range,tests)
+gi.calc_first_slopes(parents_range,ratio_range)
 
 # plot
 gi.initfig()
 for ratio in ratio_range:
-    gi.plot_percents(parents,ratio)
+    gi.plot_first_slopes_parents(parents_range,ratio,regression_type="linear")
 
 # save
 gi.legend()
