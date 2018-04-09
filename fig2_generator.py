@@ -1,16 +1,8 @@
-import genealogy
-import dot_creator
 import genealogy_inspector as gi
 import numpy as np
-import sys
-import time
-import file_manager
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
 
 tests = 10
-generations = 20
+generations = 50
 generations_sizes = 100
 a = 0
 p = 0
@@ -29,15 +21,16 @@ gi.set_parameters({
     'initial_counts': [1,generations_sizes]
 })
 
-# calculate data
-for ratio in ratio_range:
-    gi.calc_smoothed_percents(parents,ratio,tests)
+# # calculate data
+# for ratio in ratio_range:
+#     gi.calc_smoothed_percents(parents,ratio,tests)
 
 # plot
 gi.initfig()
 for ratio in ratio_range:
-    gi.plot_percents(parents,ratio)
+    gi.plot_percents(parents,ratio,regression=True)
 
 # save
 gi.legend()
+gi.title("Growth of Dominant Trait; Single-Gene")
 gi.savefig("outputs/tmp/test.png")

@@ -21,6 +21,11 @@ a = 1
 p = 1
 t = 1
 
+font = {'family' : 'normal',
+        # 'weight' : 'bold',
+        'size'   : 22}
+plt.rc('font', **font)
+
 testresultsfile = "outputs/testresults/"
 
 def read_testresults(tag):
@@ -133,65 +138,68 @@ def savefig(name,rangex=None,rangey=None):
 
     plt.savefig(name)
 
-def plot_percents(parents,ratio,label=None,title=None,xlabel=None,ylabel=None):
+def plot_percents(parents,ratio,label=None,title=None,xlabel=None,ylabel=None,regression=True):
 
     results = read_testresults("percents").get_result("percents",parents,ratio)
 
     title  = title  or "Growth of Dominant Trait"
     xlabel = xlabel or "Generation"
-    ylabel = ylabel or "Percentage Dominant Trait"
+    ylabel = ylabel or "% Pop w/ Dominant Char. Set"
 
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
     xs = [x for x in range(len(results))]
+    colors = { 1: 'b', 2: 'g', 3: 'c', 4: 'k' }
 
-    label = label or 'ratio=' + str(ratio) + ", parents=" + str(parents)
-    plt.plot(xs, results,   '.', label=label)
+    label = label or 'V = ' + str(ratio) + "; P = " + str(parents)
+    plt.plot(xs, results, '.', label=label, c=colors[ratio])
 
-    if ratio == 1:
+    if regression:
 
-        # linear regression
-        fit = optimize.curve_fit(
-            lambda x,a,b: a*x + b,
-            xs,  results,
-            p0 = (0.3,0)
-        )
-        fit = fit[0]
-        fit_fn = lambda x: fit[0]*x + fit[1]
-        print("y(x) = ax + b")
-        print("a =",fit[0])
-        print("b =",fit[1])
+        if ratio == 1:
 
-    else:
+            # linear regression
+            fit = optimize.curve_fit(
+                lambda x,a,b: a*x + b,
+                xs,  results,
+                p0 = (0.3,0)
+            )
+            fit = fit[0]
+            fit_fn = lambda x: fit[0]*x + fit[1]
+            print("y(x) = ax + b")
+            print("a =",fit[0])
+            print("b =",fit[1])
 
-        # # quadratic regression
-        fit = optimize.curve_fit(
-            lambda x,a,b,c: a*x**2 + b*x + c,
-            xs,  results,
-            p0 = (0.3,0,0.5)
-        )
-        fit = fit[0]
-        fit_fn = lambda x: fit[0]*x**2 + fit[1]*x + fit[2]
-        print("y(x) = ax^2 + bx + c")
-        print("a =",fit[0])
-        print("b =",fit[1])
-        print("c =",fit[2])
+        else:
 
-        # # # logarithmic regression
-        # xs = np.array(xs[1:])
-        # results = np.array(results[1:])
-        # fit = np.polyfit(np.log(xs), results, 1)
-        # a,b = fit[0], fit[1]
-        # fit_fn = lambda x: a*np.log(x) + b
-        # print("y(x) = a log(x) + b")
-        # print("a =",fit[0])
-        # print("b =",fit[1])
+            # # quadratic regression
+            # fit = optimize.curve_fit(
+            #     lambda x,a,b,c: a*x**2 + b*x + c,
+            #     xs,  results,
+            #     p0 = (0.3,0,0.5)
+            # )
+            # fit = fit[0]
+            # fit_fn = lambda x: fit[0]*x**2 + fit[1]*x + fit[2]
+            # print("y(x) = ax^2 + bx + c")
+            # print("a =",fit[0])
+            # print("b =",fit[1])
+            # print("c =",fit[2])
 
-    xs = np.arange(min(xs),max(xs),0.1)
-    ys = [fit_fn(xi) for xi in xs]
-    plt.plot(xs,ys,'--')
+            # logarithmic regression
+            xs = np.array(xs[1:])
+            results = np.array(results[1:])
+            fit = np.polyfit(np.log(xs), results, 1)
+            a,b = fit[0], fit[1]
+            fit_fn = lambda x: a*np.log(x) + b
+            print("y(x) = a log(x) + b")
+            print("a =",fit[0])
+            print("b =",fit[1])
+
+        xs = np.arange(min(xs),max(xs),0.1)
+        ys = [fit_fn(xi) for xi in xs]
+        plt.plot(xs,ys,'--' + colors[ratio])
 
 def plot_percents_range(parents_range,ratio_range):
     for parents in parents_range:
@@ -353,7 +361,7 @@ def plot_d0s_parents(parents_range,ratio,regression_type="linear"):
     plt.xlabel('Parents')
     plt.ylabel('Derivative')
 
-def plot_first_slopes_parents(parents_range,ratio,regression_type="linear"):
+def plot_first_slopes_parents(parents_range,ratio,regression_type="linear",regression=True):
     FS_data = read_testresults("first_slopes")
 
     # plot raw data
@@ -364,8 +372,8 @@ def plot_first_slopes_parents(parents_range,ratio,regression_type="linear"):
         # array of FS for this data point on parent number
         FS_raw = FS_data.get_result("first_slopes_raw", parents, ratio)
         # scatter
-        for fs in FS_raw:
-            plt.scatter([parents],[fs],c='b',s=10,zorder=2)
+        # for fs in FS_raw:
+        #     plt.scatter([parents],[fs],c='b',s=10,zorder=2)
 
         stds.append(np.std(FS_raw))
 
@@ -381,12 +389,15 @@ def plot_first_slopes_parents(parents_range,ratio,regression_type="linear"):
         ys.append(fs)
 
         # plot error bars
-        plt.errorbar([parents], fs, xerr=0, yerr=stds[i]/2,ecolor='r',elinewidth=10,zorder=1)
+        plt.errorbar([parents], fs, xerr=0, yerr=stds[i],ecolor='r',elinewidth=5,zorder=1)
         i += 1
 
     # plot smoothed data
 
-    plt.scatter(xs,ys,c='g',s=100,zorder=3)
+    colors = { 1: 'b', 2: 'g', 4: 'c', 8: 'k' }
+
+    plt.xticks(np.array(parents_range))
+    plt.scatter(xs,ys,c=colors[ratio],s=100,zorder=3)
 
     # regression
 
@@ -412,11 +423,13 @@ def plot_first_slopes_parents(parents_range,ratio,regression_type="linear"):
 
     xs = np.arange(min(xs),max(xs),0.1)
     ys = [fit_fn(xi) for xi in xs]
-    label = '(fs) ' + str(fit[0]) + 'x + (' + str(fit[1]) + ')'
-    plt.plot(xs,ys,'--g',label=label)
+    # label = 'y = ' + str(fit[0]) + 'x + (' + str(fit[1]) + ')'
+    label = "V = "+str(ratio)
+    plt.xticks(np.array(parents_range))
+    plt.plot(xs,ys,'--' + colors[ratio],label=label)
 
     plt.xlabel('Parents')
-    plt.ylabel('First Slope')
+    plt.ylabel('X\'')
 
 class Exp_Equation:
     def __init__(self,a,b,c,maxx):

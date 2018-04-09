@@ -1,5 +1,3 @@
-
-
 import genealogy_inspector as gi
 import numpy as np
 
@@ -9,7 +7,6 @@ generations_sizes = 100
 a = 0
 p = 0
 t = 1
-mode = "sum"
 
 parents_range = [1,10,20,30,40,50,60,70,80,90,100]
 ratio_range = [4]
